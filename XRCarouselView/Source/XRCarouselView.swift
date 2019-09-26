@@ -9,7 +9,7 @@
 /**
  * 图片无限轮播图
  *
- * 目前只支持图片轮播，后面会加入git图片，视频功能.
+ * 目前只支持图片轮播，后面会加入gif图片，视频功能.
  *
  * @by Ran Xu
  */
@@ -25,8 +25,7 @@ fileprivate func XRLog(message: String) {
 fileprivate func XRLog(message: String) {}
 #endif
 
-@objc
-protocol XRCarouselViewDelegate: NSObjectProtocol {
+@objc public protocol XRCarouselViewDelegate: NSObjectProtocol {
     
     @objc func carouselViewSetImageResource(targetImageView: UIImageView, imgRes: Any)
     @objc optional func carouselViewClickImageView(index: Int)
@@ -34,13 +33,13 @@ protocol XRCarouselViewDelegate: NSObjectProtocol {
     @objc optional func carouselViewDidEndDecelerating(index: Int)
 }
 
-enum XRCarouselIndicatorType {
+public enum XRCarouselIndicatorType {
     
     case page_control // pagecontrol 样式
     case number_view  // 数字样式
 }
 
-class XRCarouselView: UIView {
+open class XRCarouselView: UIView {
     
     fileprivate lazy var carouseScrollView: UIScrollView = UIScrollView()
     fileprivate lazy var leftImageView: UIImageView = UIImageView()
@@ -124,7 +123,7 @@ class XRCarouselView: UIView {
     }
     
     // for xib
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         self.initialzitionCarouseScrollView()
@@ -138,14 +137,14 @@ class XRCarouselView: UIView {
         self.delegate = delegate
     }
     
-    override func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         
         self.superview?.setNeedsLayout()
         self.superview?.layoutIfNeeded()
     }
     
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
         carouseScrollView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
@@ -349,7 +348,7 @@ class XRCarouselView: UIView {
 // MARK: - UIScrollViewDelegate
 extension XRCarouselView: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if assetResArray.count == 0 {
             return
@@ -371,11 +370,11 @@ extension XRCarouselView: UIScrollViewDelegate {
         }
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.stopTimer()
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         numberLbl.text = "\(curPage + 1)/\(assetResArray.count)"
         if curPage < self.assetResArray.count && self.pageControl.currentPage != curPage {
@@ -383,13 +382,13 @@ extension XRCarouselView: UIScrollViewDelegate {
         } 
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if isAutoCarousel {
             self.startTimer()
         }
     }
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if isAutoCarousel {
             self.startTimer()
         }
